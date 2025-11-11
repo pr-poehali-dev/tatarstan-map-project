@@ -233,7 +233,7 @@ const Index = () => {
             </CardHeader>
             <CardContent>
               <p className="text-6xl mb-4">🐹</p>
-              <p className="text-lg text-muted-foreground">хомяк</p>
+              <p className="text-lg text-muted-foreground">фарид привет!</p>
             </CardContent>
           </Card>
         </section>
