@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import Icon from '@/components/ui/icon';
+import YandexMap from '@/components/YandexMap';
 
 const Index = () => {
   const [showWelcome, setShowWelcome] = useState(true);
@@ -83,14 +84,7 @@ const Index = () => {
     }
   ];
 
-  const mapLocations = [
-    { name: 'Казань', x: 50, y: 45, type: 'capital' },
-    { name: 'Свияжск', x: 45, y: 42, type: 'city' },
-    { name: 'Раифа', x: 55, y: 40, type: 'monastery' },
-    { name: 'Болгар', x: 48, y: 60, type: 'historical' },
-    { name: 'Елабуга', x: 70, y: 35, type: 'city' },
-    { name: 'Чистополь', x: 65, y: 50, type: 'city' }
-  ];
+
 
   return (
     <div className="min-h-screen bg-background">
@@ -229,98 +223,7 @@ const Index = () => {
             </p>
           </div>
           
-          <Card className="overflow-hidden shadow-2xl">
-            <CardContent className="p-0">
-              <div className="relative w-full h-[600px] bg-gradient-to-br from-blue-50 to-green-50">
-                <svg 
-                  className="w-full h-full" 
-                  viewBox="0 0 100 100"
-                  preserveAspectRatio="xMidYMid meet"
-                >
-                  <path
-                    d="M 20 30 Q 30 25 40 30 L 45 28 L 55 25 L 65 28 L 75 32 L 80 40 L 82 50 L 80 60 L 75 70 L 65 75 L 55 78 L 45 75 L 35 72 L 25 65 L 20 55 L 18 45 Z"
-                    fill="rgba(14, 165, 233, 0.1)"
-                    stroke="rgba(14, 165, 233, 0.3)"
-                    strokeWidth="0.5"
-                    className="drop-shadow-lg"
-                  />
-                  
-                  <path
-                    d="M 30 40 L 40 38 L 50 40 L 60 42 L 70 45 L 72 55 L 68 65 L 58 68 L 48 66 L 38 63 L 28 55 Z"
-                    fill="rgba(14, 165, 233, 0.15)"
-                    className="animate-pulse"
-                    style={{ animationDuration: '3s' }}
-                  />
-
-                  {mapLocations.map((location, index) => (
-                    <g key={index} className="cursor-pointer hover:opacity-80 transition-opacity">
-                      <circle
-                        cx={location.x}
-                        cy={location.y}
-                        r={location.type === 'capital' ? '3' : '2'}
-                        fill={
-                          location.type === 'capital' ? '#ef4444' :
-                          location.type === 'historical' ? '#f59e0b' :
-                          location.type === 'monastery' ? '#8b5cf6' :
-                          '#0ea5e9'
-                        }
-                        className="drop-shadow-md"
-                      />
-                      <circle
-                        cx={location.x}
-                        cy={location.y}
-                        r={location.type === 'capital' ? '5' : '3.5'}
-                        fill="none"
-                        stroke={
-                          location.type === 'capital' ? '#ef4444' :
-                          location.type === 'historical' ? '#f59e0b' :
-                          location.type === 'monastery' ? '#8b5cf6' :
-                          '#0ea5e9'
-                        }
-                        strokeWidth="0.5"
-                        opacity="0.4"
-                        className="animate-ping"
-                        style={{ animationDuration: '2s', animationDelay: `${index * 0.3}s` }}
-                      />
-                      <text
-                        x={location.x}
-                        y={location.y - 4}
-                        fontSize="3"
-                        fontWeight="600"
-                        fill="#1e293b"
-                        textAnchor="middle"
-                        className="pointer-events-none font-sans"
-                      >
-                        {location.name}
-                      </text>
-                    </g>
-                  ))}
-                </svg>
-
-                <div className="absolute bottom-6 right-6 bg-white/90 backdrop-blur-sm rounded-lg p-4 shadow-lg">
-                  <h3 className="font-semibold mb-3 text-sm">Легенда</h3>
-                  <div className="space-y-2 text-xs">
-                    <div className="flex items-center gap-2">
-                      <div className="w-3 h-3 rounded-full bg-red-500"></div>
-                      <span>Столица</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <div className="w-3 h-3 rounded-full bg-blue-500"></div>
-                      <span>Города</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <div className="w-3 h-3 rounded-full bg-amber-500"></div>
-                      <span>Исторические места</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <div className="w-3 h-3 rounded-full bg-purple-500"></div>
-                      <span>Монастыри</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+          <YandexMap />
         </section>
 
         <section id="about" className="text-center py-16 animate-fade-in" style={{ animationDelay: '600ms' }}>
