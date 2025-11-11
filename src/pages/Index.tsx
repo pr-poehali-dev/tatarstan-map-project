@@ -5,9 +5,19 @@ import { Badge } from '@/components/ui/badge';
 import Icon from '@/components/ui/icon';
 import YandexMap from '@/components/YandexMap';
 
+interface Comment {
+  id: string;
+  username: string;
+  text: string;
+  date: string;
+}
+
 const Index = () => {
   const [showWelcome, setShowWelcome] = useState(true);
   const mapRef = useRef<HTMLDivElement>(null);
+  const [comments, setComments] = useState<Comment[]>([]);
+  const [username, setUsername] = useState('');
+  const [commentText, setCommentText] = useState('');
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -15,6 +25,36 @@ const Index = () => {
     }, 3000);
     return () => clearTimeout(timer);
   }, []);
+
+  useEffect(() => {
+    const savedComments = localStorage.getItem('tatarstan-comments');
+    if (savedComments) {
+      setComments(JSON.parse(savedComments));
+    }
+  }, []);
+
+  const handleAddComment = () => {
+    if (!username.trim() || !commentText.trim()) return;
+
+    const newComment: Comment = {
+      id: Date.now().toString(),
+      username: username.trim(),
+      text: commentText.trim(),
+      date: new Date().toLocaleString('ru-RU', {
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+      })
+    };
+
+    const updatedComments = [newComment, ...comments];
+    setComments(updatedComments);
+    localStorage.setItem('tatarstan-comments', JSON.stringify(updatedComments));
+    setUsername('');
+    setCommentText('');
+  };
 
   const scrollToMap = () => {
     mapRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -224,6 +264,88 @@ const Index = () => {
           </div>
           
           <YandexMap />
+        </section>
+
+        <section className="mb-16 animate-fade-in" style={{ animationDelay: '500ms' }}>
+          <div className="text-center mb-8">
+            <h2 className="text-4xl font-bold mb-3">Комментарии</h2>
+            <p className="text-muted-foreground text-lg">
+              Поделитесь своим мнением о Татарстане
+            </p>
+          </div>
+
+          <Card className="max-w-3xl mx-auto mb-8">
+            <CardHeader>
+              <CardTitle>Оставить комментарий</CardTitle>
+              <CardDescription>Расскажите, что вы думаете о достопримечательностях Татарстана</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                <div>
+                  <label htmlFor="username" className="block text-sm font-medium mb-2">
+                    Ваше имя
+                  </label>
+                  <input
+                    id="username"
+                    type="text"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    placeholder="Как вас зовут?"
+                    className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-accent"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="comment" className="block text-sm font-medium mb-2">
+                    Комментарий
+                  </label>
+                  <textarea
+                    id="comment"
+                    value={commentText}
+                    onChange={(e) => setCommentText(e.target.value)}
+                    placeholder="Напишите ваш комментарий..."
+                    rows={4}
+                    className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-accent resize-none"
+                  />
+                </div>
+                <Button 
+                  onClick={handleAddComment}
+                  disabled={!username.trim() || !commentText.trim()}
+                  className="w-full"
+                >
+                  <Icon name="Send" className="mr-2 h-4 w-4" />
+                  Отправить комментарий
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+
+          <div className="max-w-3xl mx-auto space-y-4">
+            {comments.length === 0 ? (
+              <Card>
+                <CardContent className="py-12 text-center">
+                  <Icon name="MessageSquare" className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
+                  <p className="text-muted-foreground">Пока нет комментариев. Будьте первым!</p>
+                </CardContent>
+              </Card>
+            ) : (
+              comments.map((comment) => (
+                <Card key={comment.id} className="hover:shadow-md transition-shadow">
+                  <CardHeader>
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <Icon name="User" className="h-5 w-5 text-accent" />
+                        <CardTitle className="text-lg">{comment.username}</CardTitle>
+                      </div>
+                      <CardDescription className="text-sm">{comment.date}</CardDescription>
+                    </div>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-foreground/90">{comment.text}</p>
+                  </CardContent>
+                </Card>
+              ))
+            )}
+          </div>
         </section>
 
         <section id="about" className="text-center py-16 animate-fade-in" style={{ animationDelay: '600ms' }}>
